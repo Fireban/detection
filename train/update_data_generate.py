@@ -42,9 +42,8 @@ class trainInfoGenerator():
 
         for i in result:
             filename = str(i['path'].split('/')[-1].replace('.png', ''))
-            image_png_path = os.path.join('/var/www', i['target.path'])
+            image_png_path = '/var/www' + i['path']
             label_txt_path = os.path.join(self.label_dir, filename+'.txt')
-
             w, h = image_size(image_png_path)
 
             x_center = (int(i['xmin']) + int(i['xmax'])) / h
