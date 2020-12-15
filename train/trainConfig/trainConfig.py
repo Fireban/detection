@@ -4,7 +4,7 @@ import os
 class trainConfig():
     def __init__(self, type = 'yolo'):
         # 학습 반복 에폭수 (전체 데이터 한번 학습 완료 = 1 epoch)
-        self.epochs = 100
+        self.epochs = 1000
         # 한번의 학습에 사용할 이미지 수(dataloader에서 한번에 몇 장의 이미지가 나올지)
         self.batch_size = 8
         # 몇개의 배치 수를 학습하고 역전파 값으로 가중치를 갱신할지
@@ -40,9 +40,9 @@ class trainConfig():
             self.img_size = 320
             self.model_def = "../raspberry-code/config/yolov3-tiny.cfg"
             self.pretrained_weights = "../raspberry-code/weights/weights_for_run.pth"
-            self.save_path = "../raspberry-code/weights/weights_for_ru.pth"
+            self.save_path = "../raspberry-code/weights/weights_for_run.pth"
         elif type == 'yolo':
             self.img_size = 640
             self.model_def = "../serverDetect/config/yolov3.cfg"
             self.pretrained_weights = "../serverDetect/weights/weights_for_run.pth"
-            self.save_path = "../serverDetect/weights/weights_for_ru.pth"
+            self.save_path = "../serverDetect/weights/weights_for_run.pth"

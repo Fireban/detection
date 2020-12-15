@@ -1,5 +1,5 @@
 python3 first_data_generate.py
-python3 update_data_generate.py
+#python3 update_data_generate.py
 
 python3 train.py --type=yolo
 python3 train.py --type=yolotiny
