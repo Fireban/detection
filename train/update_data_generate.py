@@ -62,7 +62,7 @@ class trainInfoGenerator():
         self.cursor.execute(self.train_sql)
         result = self.cursor.fetchall()
 
-        f = open('yolo/data/train.txt', 'w')
+        f = open('../serverDetect/data/train.txt', 'a')
         for i in result:
             if(len(i['path']) > 2):
                 f.write('/var/www/' + i['path'] + '\n')
