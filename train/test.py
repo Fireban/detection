@@ -11,11 +11,10 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 from serverDetect.models import *
 from serverDetect.utils.utils import *
-from serverDetect.utils.datasets import *
+from utils.datasets import *
 from serverDetect.utils.parse_config import *
 
 from PIL import ImageDraw
-from torch.utils.data import DataLoader
 from torchvision import transforms
 from torch.autograd import Variable
 

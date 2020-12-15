@@ -47,7 +47,7 @@ def xml_to_txt(xml_path, label_dir):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--data_root_path", default="/var/www/output/origin", help="data root directory path")
-    parser.add_argument("--save_dir", default=os.path.join(os.getcwd(), '../server-detect/data'), help="txt save path")
+    parser.add_argument("--save_dir", default=os.path.join(os.getcwd(), '../serverDetect/data'), help="txt save path")
     opt = parser.parse_args()
     print(opt)
 

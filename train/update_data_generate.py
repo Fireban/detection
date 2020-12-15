@@ -25,7 +25,7 @@ class trainInfoGenerator():
                             from detect_targetdetection as detect \
                             JOIN detect_targetimage as target on target.id= detect.targetImage_id;"
         # DB에서 탐지된 이미지 리스트 가져오는 sql query
-        self.train_sql = "SELECT path FROM `detect_targetimage`;"
+        self.train_sql = "SELECT path FROM `detect_targetimage` where isUpdated=1;"
         self.image_dir = image_dir
         self.label_dir = label_dir
 

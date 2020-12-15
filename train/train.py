@@ -11,9 +11,9 @@ import torch
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 from serverDetect.models import *
-from serverDetect.utils.logger import *
+from utils.logger import *
 from serverDetect.utils.utils import *
-from serverDetect.utils.datasets import *
+from utils.datasets import *
 from serverDetect.utils.parse_config import *
 from test import evaluate
 from terminaltables import AsciiTable
@@ -35,24 +35,24 @@ if __name__ == "__main__":
     os.makedirs("checkpoints", exist_ok=True)
     os.makedirs('result_save', exist_ok=True)
 
-    # Get data configuration
+    # 데이터 관련 경로, 클래스 명 가져오기
     data_config = parse_data_config(config.data_config)
     train_path = data_config["train"]
     valid_path = data_config["valid"]
     class_names = load_classes(data_config["names"])
 
-    # Initiate model
+    # 모델 구조 형성 & 초기화
     model = Darknet(config.model_def).to(device)
     model.apply(weights_init_normal)
 
-    # If specified we start from checkpoint
+    # 저장된 가중치가 있다면 읽어와서 모델에 적용
     if config.pretrained_weights:
         if config.pretrained_weights.endswith(".pth"):
             model.load_state_dict(torch.load(config.pretrained_weights, map_location=device))
         else:
             model.load_darknet_weights(config.pretrained_weights)
 
-    # Get dataloader
+    #
     dataset = ListDataset(train_path, augment=True, multiscale=config.multiscale_training)
     dataloader = torch.utils.data.DataLoader(
         dataset,
@@ -82,21 +82,28 @@ if __name__ == "__main__":
         "conf_noobj",
     ]
 
+    # epochs만큼 학습 시작
     for epoch in range(config.epochs):
+        # 모델 가중치가 갱신 되도록 전환
         model.train()
         start_time = time.time()
+        # batch size 단위로 이미지와 label을 읽어온다.
         for batch_i, (_, imgs, targets) in enumerate(dataloader):
             batches_done = len(dataloader) * epoch + batch_i
 
+            # 현재 학습 환경에 맞게 데이터 타입 변경
             imgs = Variable(imgs.to(device))
             targets = Variable(targets.to(device), requires_grad=False)
 
+            # 모델에 이미지와 라벨을 입력하고 손실과 결과 값 받아오기.
             loss, outputs = model(imgs, targets)
+            # 역전파할 손실을 계산하여 모델 가중치 변화도 계산 & 누적
             loss.backward()
 
             if batches_done % config.gradient_accumulations:
-                # Accumulates gradient before each step
+                # 역전파로 계산된 모델의 가중치 변화도 만큼 가중치 갱신
                 optimizer.step()
+                # 누적된 값 지우기
                 optimizer.zero_grad()
 
             # ----------------
@@ -138,7 +145,7 @@ if __name__ == "__main__":
 
         if epoch % config.evaluation_interval == 0:
             print("\n---- Evaluating Model ----")
-            # Evaluate the model on the validation set
+            # validation 성능 평가
             precision, recall, AP, f1, ap_class = evaluate(
                 model,
                 path=valid_path,
@@ -163,5 +170,8 @@ if __name__ == "__main__":
             print(AsciiTable(ap_table).table)
             print(f"---- mAP {AP.mean()}")
 
-        if epoch % config.checkpoint_interval == 0:
-            torch.save(model.state_dict(), config.save_path)
+            # 과거의 최소 validataion loss 보다 더 작은 loss면 모델을 저장하고 minvalidation을 갱신
+            if AP.mean() < config.min_val_loss:
+                torch.save(model.state_dict(), config.save_path)
+                with open(config.min_val_loss_path, 'w') as f:
+                    f.write(str(AP.mean()))
