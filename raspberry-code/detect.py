@@ -42,7 +42,7 @@ if __name__ == "__main__":
     )
 
     post_uri = 'http://www.fireban.kr/api/detect/find/'
-    mac = uuid.getnode()
+    mac = open('/sys/class/net/eth0/address').read()[:-1]
     img_width = frame_width
     img_height = frame_height
 

@@ -5,18 +5,11 @@ import base64
 class postSender():
     def __init__(self, URL, mac, img_width, img_height):
         self.URL = URL
-        mac = bytearray.fromhex('{:012X}'.format(mac))
-        self.mac = ''
-        for i in range(0, 6):
-            self.mac += '%02x:' % mac[i]
-        self.mac = self.mac[:-1]
+        self.mac = mac
         self.img_width = img_width
         self.img_height = img_height
 
     def sendMessage(self, img_bytes, detections):
-        obj_string = 'objectnum={}'.format(len(detections))
-        detect_string = '|type={},min_x={},min_y={},max_x={},max_y={}'
-        response = None
         img_base64 = base64.b64encode(img_bytes).decode('utf-8')
         x1, y1, x2, y2, conf, cls_conf, cls_pred = detections[0]
         data = {
