@@ -6,7 +6,7 @@ class trainConfig():
         # 학습 반복 에폭수 (전체 데이터 한번 학습 완료 = 1 epoch)
         self.epochs = 100
         # 한번의 학습에 사용할 이미지 수(dataloader에서 한번에 몇 장의 이미지가 나올지)
-        self.batch_size = 32
+        self.batch_size = 8
         # 몇개의 배치 수를 학습하고 역전파 값으로 가중치를 갱신할지
         self.gradient_accumulations = 2
         # 읽어 올 데이터 위치 적혀있음.
