@@ -1,7 +1,0 @@
-/var/www/output/origin/images/10m_15m_1667.png
-/var/www/output/origin/images/3560.png
-/var/www/output/origin/images/5m_895.png
-/var/www/output/origin/images/3795.png
-/var/www/output/origin/images/3848.png
-/var/www/output/origin/images/29740.png
-/var/www/output/origin/images/3648.png

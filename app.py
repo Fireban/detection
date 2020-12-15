@@ -9,8 +9,8 @@ from flask import request
 from celery import Celery
 
 from detect_celery import get_image_path
-from yolo.detect_images import ImageDetect
-from yolo.db_models import db
+from server-detect.detect_images import ImageDetect
+from server-detect.db_models import db
 
 ''' redis, celery 켜기
 redis-server

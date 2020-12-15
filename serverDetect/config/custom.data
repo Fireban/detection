@@ -1,0 +1,4 @@
+classes= 1
+train=../serverDetect/data/train.txt
+valid=../serverDetect/data/valid.txt
+names=../serverDetect/data/classes.names

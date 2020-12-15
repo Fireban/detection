@@ -12,7 +12,3 @@ curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.s
 apt-get install git-lfs
 git lfs install
 git lfs pull
-
-#mkdir /home/fireban
-#mkdir /home/fireban/detection
-#mv ./* /home/fireban/detection/

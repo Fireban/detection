@@ -1,18 +1,20 @@
 #-*- coding: utf-8-*-
 from __future__ import division
-
-from yolo.models import *
-from yolo.utils.utils import *
-from yolo.utils.datasets import *
-from yolo.utils.parse_config import *
-
 import os
+import sys
 import argparse
 import tqdm
 import numpy as np
-from PIL import ImageDraw
-
 import torch
+
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+
+from serverDetect.models import *
+from serverDetect.utils.utils import *
+from serverDetect.utils.datasets import *
+from serverDetect.utils.parse_config import *
+
+from PIL import ImageDraw
 from torch.utils.data import DataLoader
 from torchvision import transforms
 from torch.autograd import Variable

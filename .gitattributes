@@ -1,1 +1,1 @@
-yolo/weights/weights_for_run.pth filter=lfs diff=lfs merge=lfs -text
+serverDetect/weights/weights_for_run.pth filter=lfs diff=lfs merge=lfs -text
