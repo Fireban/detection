@@ -85,7 +85,7 @@ if __name__ == "__main__":
 
             # Save image and detections
             print('detections: ', detections)
-            if(len(detections) != 0 and type(detections[0]) == torch.Tensor):
+            if len(detections) != 0 and type(detections[0]) == torch.Tensor:
                 print(postSender.sendMessage(img_data, detections[0]))
                 # image post
         print("processing time ", time.time() - prev_time)
