@@ -25,6 +25,13 @@ nohup python3 -u app.py & > app.log &
 nohup celery -A app.celery worker --loglevel=info & > celery.log &
 ```
 
+### Server Train run
+
+```
+sudo su
+sh train_sh.sh
+```
+
 ## Raspberrypi Setup
 
 ```
