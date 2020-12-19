@@ -40,7 +40,7 @@ apt-get upgrade
 apt-get install git
 
 git clone "THIS REPO"
-cd SWmaestro-fireban-detection/raspberry-code
+cd detection/raspberry-code
 
 sudo su
 sh rasp_init.sh
