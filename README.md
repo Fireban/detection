@@ -49,8 +49,8 @@ sh rasp_init.sh
 ### Raspberrypi Detection Setup
 
 ```
-python3 -m pip install tmp/PyTorch-and-Vision-for-Raspberry-Pi-4B/torch-1.4.0a0+f43194e-cp37-cp37m-linux_armv7l.whl
-python3 -m pip install tmp/PyTorch-and-Vision-for-Raspberry-Pi-4B/torchvision-0.5.0a0+9cdc814-cp37-cp37m-linux_armv7l.whl
+python3 -m pip install /tmp/PyTorch-and-Vision-for-Raspberry-Pi-4B/torch-1.4.0a0+f43194e-cp37-cp37m-linux_armv7l.whl
+python3 -m pip install /tmp/PyTorch-and-Vision-for-Raspberry-Pi-4B/torchvision-0.5.0a0+9cdc814-cp37-cp37m-linux_armv7l.whl
 pip3 install -r requirements.txt
 ```
 
