@@ -54,3 +54,26 @@ python3 -m pip install /tmp/PyTorch-and-Vision-for-Raspberry-Pi-4B/torchvision-0
 pip3 install -r requirements.txt
 ```
 
+## Raspberrypi Detection Auto Update
+
+아래 경로의 스크립트 제일 마지막에 해당 코드를 넣고 저장해줍니다.
+sudo vim /etc/profile.d/bash_completion.sh
+
+```
+cd /home/pi/detection
+
+ONLINE=1
+while [ $ONLINE -ne 0 ]
+do
+   ping -q -c 1 -w 1 www.github.com >/dev/null 2>&1
+   ONLINE=$?
+   if [ $ONLINE -ne 0 ]
+     then
+       sleep 5
+   fi
+done
+echo "We are on line!" 
+
+sudo git pull origin master
+```
+
