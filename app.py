@@ -54,9 +54,9 @@ def start_detection(data_dir, out_dir, detect_key, detect_start_time):
 
     print("celery start!")
     # 탐지에 필요한 설정 값들
-    model_def = "yolo/config/yolov3.cfg"
-    weights_path = "yolo/weights/weights_for_run.pth"
-    class_path = "yolo/data/classes.names"
+    model_def = "serverDetect/config/yolov3.cfg"
+    weights_path = "serverDetect/weights/weights_for_run.pth"
+    class_path = "serverDetect/data/classes.names"
     conf_thres = 0.4
     nms_thres = 0.3
     batch_size = 1
@@ -64,7 +64,7 @@ def start_detection(data_dir, out_dir, detect_key, detect_start_time):
     save = True
     cuda = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     lr_to_hr_ratio = 2
-    lr_to_hr_weights_path = "yolo/ESPCN/weights/weights.pt"
+    lr_to_hr_weights_path = "serverDetect/ESPCN/weights/weights.pt"
 
     class _Args:
         def __init__(self, **entries):
