@@ -3,7 +3,7 @@ import os
 import glob
 import natsort
 import time
-from server-detect.db_models import *
+from serverDetect.db_models import *
 
 
 def get_image_path(image_dir, image_key, detect_start_time):

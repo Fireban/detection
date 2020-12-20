@@ -23,7 +23,8 @@ class trainInfoGenerator():
         # DB에서 탐지된 정보 가져오는 sql query
         self.label_sql = "select detect.detectType, detect.xmin, detect.ymin, detect.xmax, detect.ymax, target.path \
                             from detect_targetdetection as detect \
-                            JOIN detect_targetimage as target on target.id= detect.targetImage_id;"
+                            JOIN detect_targetimage as target on target.id= detect.targetImage_id \
+                            WHERE detectType=0;"
         # DB에서 탐지된 이미지 리스트 가져오는 sql query
         self.train_sql = "SELECT path FROM `detect_targetimage` where isUpdated=1;"
         self.image_dir = image_dir
@@ -64,7 +65,7 @@ class trainInfoGenerator():
         f = open('../serverDetect/data/train.txt', 'a')
         for i in result:
             if(len(i['path']) > 2):
-                f.write('/var/www/' + i['path'] + '\n')
+                f.write('/var/www' + i['path'] + '\n')
         f.close()
 
     def run(self):

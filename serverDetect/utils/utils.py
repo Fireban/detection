@@ -3,6 +3,20 @@ from __future__ import division
 import tqdm
 import torch
 import numpy as np
+import torch.nn.functional as F
+
+
+def pad_to_square(img, pad_value):
+    h, w = img.shape[-2], img.shape[-1]
+    dim_diff = np.abs(h - w)
+    # (upper / left) padding and (lower / right) padding
+    pad1, pad2 = dim_diff // 2, dim_diff - dim_diff // 2
+    # Determine padding
+    pad = (0, 0, pad1, pad2) if h <= w else (pad1, pad2, 0, 0)
+    # Add padding
+    img = F.pad(img, pad, "constant", value=pad_value)
+
+    return img, pad
 
 
 def to_cpu(tensor):

@@ -124,6 +124,7 @@ class ImageDetect():
             img = self.lr_to_hr_model(img)
             # 정사각형으로 이미지 변환 ex) (480, 640) -> (640, 640)
             img = F.interpolate(img, max(img.shape[-1], img.shape[-2]))
+            #img, _ = pad_to_square(img, 0)
             # 1 channel -> 3 channel로 변환 # later (추후 제거 가능: model train 시에 config 변경)
             img = img.expand(-1, 3, -1, -1)
             # 마지막 이미지 크기 추출
@@ -197,8 +198,8 @@ if __name__ == '__main__':
         'nms_thres': nms_thres,
         'batch_size': batch_size,
         'img_size': img_size,
-        'cuda': cuda,
-        'image_path': os.path.join(base_dir, 'test_image_dir', '10m_15m_499.png'),
+        'cuda': "cuda"  if cuda else "cpu",
+        'image_path': os.path.join(base_dir, 'test_image_dir', '5m_718.png'),
         'lr_to_hr_ratio': 2,
         'lr_to_hr_weights_path': 'ESPCN/weights/weights.pt',
         'hw_key': detect_key,
