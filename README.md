@@ -77,6 +77,8 @@ echo "We are on line!"
 sudo git pull origin master
 
 cd raspberry-code
-sudo python3 detect.py
+sudo python3 detect.py &
+
+cd ~
 ```
 
