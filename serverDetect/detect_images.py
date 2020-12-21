@@ -74,13 +74,13 @@ class ImageDetect():
         db.session.commit()
 
     # 최종 탐지 좌표를 원래의 이미지에서의 값으로 변환
-    def calc_origin_points(self, size_origin, size_result, x_min, y_min, x_max, y_max):
+    def calc_origin_points(self, size_origin, size_result, x_min, y_min, x_max, y_max, pad):
 
         # (원본 이미지 길이 / 결과 이미지 길이) * 원본 좌표
-        x_min = int((size_origin[0] / size_result[0]) * x_min)
-        y_min = int((size_origin[1] / size_result[1]) * y_min)
-        x_max = int((size_origin[0] / size_result[0]) * x_max)
-        y_max = int((size_origin[1] / size_result[1]) * y_max)
+        x_min = int((x_min - pad[0]) / self.lr_to_hr_ratio)
+        y_min = int((y_min - pad[2]) / self.lr_to_hr_ratio)
+        x_max = int((x_max - pad[1]) / self.lr_to_hr_ratio)
+        y_max = int((y_max - pad[3]) / self.lr_to_hr_ratio)
 
         return x_min, y_min, x_max, y_max
 
@@ -123,8 +123,7 @@ class ImageDetect():
             # 이미지 실시간 고해상화 진행
             img = self.lr_to_hr_model(img)
             # 정사각형으로 이미지 변환 ex) (480, 640) -> (640, 640)
-            img = F.interpolate(img, max(img.shape[-1], img.shape[-2]))
-            #img, _ = pad_to_square(img, 0)
+            img, pad = pad_to_square(img, 0)
             # 1 channel -> 3 channel로 변환 # later (추후 제거 가능: model train 시에 config 변경)
             img = img.expand(-1, 3, -1, -1)
             # 마지막 이미지 크기 추출
@@ -144,7 +143,7 @@ class ImageDetect():
                 is_detect = True
                 # 원본 이미지 사이즈의 좌표로 변환
                 x_min, y_min, x_max, y_max = self.calc_origin_points(image_size_origin, image_size_result,
-                                                                     x_min, y_min, x_max, y_max)
+                                                                     x_min, y_min, x_max, y_max, pad)
 
                 # 탐지 결과 시각화 # later (추후 제거 가능: 결과 이미지를 볼 필요 없을때)
                 draw = ImageDraw.Draw(image_result)
