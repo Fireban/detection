@@ -72,8 +72,11 @@ do
        sleep 5
    fi
 done
-echo "We are on line!" 
+echo "We are on line!"
 
 sudo git pull origin master
+
+cd raspberry-code
+sudo python3 detect.py
 ```
 
