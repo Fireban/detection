@@ -32,6 +32,15 @@ sudo su
 sh train_sh.sh
 ```
 
+### Server Auto Train Setup
+
+chmod 755 /home/fireban/detection/train/train_sh.sh
+sudo crontab -e
+
+```
+* * * * * root /home/fireban/detection/train/train_sh.sh >> /home/fireban/detection/train/train_sh.log 2>&1
+```
+
 ## Raspberrypi Setup
 
 ```
