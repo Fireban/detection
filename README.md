@@ -34,9 +34,10 @@ sh train_sh.sh
 
 ### Server Auto Train Setup
 
+" * " 부분에 원하는 시간 지정.
 chmod 755 /home/fireban/detection/train/train_sh.sh
-sudo crontab -e
 
+sudo crontab -e
 ```
 * * * * * root /home/fireban/detection/train/train_sh.sh >> /home/fireban/detection/train/train_sh.log 2>&1
 ```
@@ -44,12 +45,7 @@ sudo crontab -e
 ## Raspberrypi Setup
 
 ```
-apt-get update
-apt-get upgrade
-apt-get install git
-
-git clone "THIS REPO"
-cd detection/raspberry-code
+cd ./detection/raspberry-code
 
 sudo su
 sh rasp_init.sh
@@ -66,6 +62,7 @@ pip3 install -r requirements.txt
 ## Raspberrypi Detection Auto Update
 
 아래 경로의 스크립트 제일 마지막에 해당 코드를 넣고 저장해줍니다.
+
 sudo vim /etc/profile.d/bash_completion.sh
 
 ```
@@ -88,6 +85,6 @@ sudo git pull origin master
 cd raspberry-code
 sudo python3 detect.py &
 
-cd ~
+cd /home/pi
 ```
 
