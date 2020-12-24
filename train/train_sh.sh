@@ -1,4 +1,4 @@
-cd /home/fireban/server_ssh/detection/train
+cd /home/fireban/detection/train
 
 python3 first_data_generate.py
 python3 update_data_generate.py

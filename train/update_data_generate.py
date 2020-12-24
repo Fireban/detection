@@ -43,7 +43,7 @@ class trainInfoGenerator():
 
         for i in result:
             filename = str(i['path'].split('/')[-1].replace('.png', ''))
-            image_png_path = '/var/www' + i['path']
+            image_png_path = '/var/www/' + i['path']
             label_txt_path = os.path.join(self.label_dir, filename+'.txt')
             w, h = image_size(image_png_path)
 
@@ -65,7 +65,7 @@ class trainInfoGenerator():
         f = open('../serverDetect/data/train.txt', 'a')
         for i in result:
             if(len(i['path']) > 2):
-                f.write('/var/www' + i['path'] + '\n')
+                f.write('/var/www/' + i['path'] + '\n')
         f.close()
 
     def run(self):

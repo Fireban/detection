@@ -72,7 +72,10 @@ def start_detection(data_dir, out_dir, detect_key, detect_start_time):
 
     base_dir = os.path.dirname(os.path.abspath(__file__))
     output_dir = out_dir
+
+    oldmask = os.umask(000)
     os.makedirs(data_dir, exist_ok=True, mode=0o777)
+    os.umask(oldmask)
     os.makedirs(output_dir, exist_ok=True, mode=0o777)
 
     config = {
