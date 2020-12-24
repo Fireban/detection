@@ -45,12 +45,18 @@ if __name__ == "__main__":
     model = Darknet(config.model_def).to(device)
     model.apply(weights_init_normal)
 
+    ## multi gpu
+    model = nn.DataParallel(model, device_ids=[i for i in range(torch.cuda.device_count())])
+    # end
+
+    ## multi gpu (model.load~~ -> model.module.load~~)
     # 저장된 가중치가 있다면 읽어와서 모델에 적용
     if config.pretrained_weights:
         if config.pretrained_weights.endswith(".pth"):
-            model.load_state_dict(torch.load(config.pretrained_weights, map_location=device))
+            model.module.load_state_dict(torch.load(config.pretrained_weights, map_location=device))
         else:
-            model.load_darknet_weights(config.pretrained_weights)
+            model.module.load_darknet_weights(config.pretrained_weights)
+    # end
 
     #
     dataset = ListDataset(train_path, augment=True, multiscale=config.multiscale_training)
@@ -61,6 +67,7 @@ if __name__ == "__main__":
         num_workers=config.n_cpu,
         pin_memory=True,
         collate_fn=dataset.collate_fn,
+        drop_last=True,
     )
 
     optimizer = torch.optim.Adam(model.parameters())
@@ -98,7 +105,7 @@ if __name__ == "__main__":
             # 모델에 이미지와 라벨을 입력하고 손실과 결과 값 받아오기.
             loss, outputs = model(imgs, targets)
             # 역전파할 손실을 계산하여 모델 가중치 변화도 계산 & 누적
-            loss.backward()
+            loss.mean().backward()
 
             if batches_done % config.gradient_accumulations:
                 # 역전파로 계산된 모델의 가중치 변화도 만큼 가중치 갱신
@@ -112,19 +119,19 @@ if __name__ == "__main__":
 
             log_str = "\n---- [Epoch %d/%d, Batch %d/%d] ----\n" % (epoch, config.epochs, batch_i, len(dataloader))
 
-            metric_table = [["Metrics", *[f"YOLO Layer {i}" for i in range(len(model.yolo_layers))]]]
+            metric_table = [["Metrics", *[f"YOLO Layer {i}" for i in range(len(model.module.yolo_layers))]]]
 
             # Log metrics at each YOLO layer
             for i, metric in enumerate(metrics):
                 formats = {m: "%.6f" for m in metrics}
                 formats["grid_size"] = "%2d"
                 formats["cls_acc"] = "%.2f%%"
-                row_metrics = [formats[metric] % yolo.metrics.get(metric, 0) for yolo in model.yolo_layers]
+                row_metrics = [formats[metric] % yolo.metrics.get(metric, 0) for yolo in model.module.yolo_layers]
                 metric_table += [[metric, *row_metrics]]
 
                 # Tensorboard logging
                 tensorboard_log = []
-                for j, yolo in enumerate(model.yolo_layers):
+                for j, yolo in enumerate(model.module.yolo_layers):
                     for name, metric in yolo.metrics.items():
                         if name != "grid_size":
                             tensorboard_log += [(f"{name}_{j + 1}", metric)]
@@ -141,7 +148,7 @@ if __name__ == "__main__":
 
             print(log_str)
 
-            model.seen += imgs.size(0)
+            model.module.seen += imgs.size(0)
 
         if epoch % config.evaluation_interval == 0:
             print("\n---- Evaluating Model ----")
@@ -153,7 +160,7 @@ if __name__ == "__main__":
                 conf_thres=0.5,
                 nms_thres=0.5,
                 img_size=config.img_size,
-                batch_size=1,
+                batch_size= torch.cuda.device_count() * 2,
             )
             evaluation_metrics = [
                 ("val_precision", precision.mean()),
@@ -172,6 +179,6 @@ if __name__ == "__main__":
 
             # 과거의 최소 validataion loss 보다 더 작은 loss면 모델을 저장하고 minvalidation을 갱신
             if AP.mean() < config.min_val_loss:
-                torch.save(model.state_dict(), config.save_path)
+                torch.save(model.module.state_dict(), config.save_path)
                 with open(config.min_val_loss_path, 'w') as f:
                     f.write(str(AP.mean()))

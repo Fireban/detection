@@ -294,6 +294,13 @@ def build_targets(pred_boxes, pred_cls, target, anchors, ignore_thres):
     th = FloatTensor(nB, nA, nG, nG).fill_(0)
     tcls = FloatTensor(nB, nA, nG, nG, nC).fill_(0)
 
+    ## multi gpu from ""
+    obj_mask = obj_mask.bool()
+    noobj_mask = noobj_mask.bool()
+
+    target = target[target.sum(dim=1) != 0]
+    # end
+
     # Convert to position relative to box
     target_boxes = target[:, 2:6] * nG
     gxy = target_boxes[:, :2]
@@ -303,9 +310,22 @@ def build_targets(pred_boxes, pred_cls, target, anchors, ignore_thres):
     best_ious, best_n = ious.max(0)
     # Separate target values
     b, target_labels = target[:, :2].long().t()
+
+    ## multi gpu from ""
+    b = b % 8
+    # end
+
     gx, gy = gxy.t()
     gw, gh = gwh.t()
     gi, gj = gxy.long().t()
+
+    ## multi gpu from ""
+    gi[gi < 0] = 0
+    gj[gj < 0] = 0
+    gi[gi > nG - 1] = nG - 1
+    gj[gj > nG - 1] = nG - 1
+    # end
+
     # Set masks
     obj_mask[b, best_n, gj, gi] = 1
     noobj_mask[b, best_n, gj, gi] = 0

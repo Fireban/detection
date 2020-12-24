@@ -258,7 +258,17 @@ class Darknet(nn.Module):
                 yolo_outputs.append(x)
             layer_outputs.append(x)
         yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
-        return yolo_outputs if targets is None else (loss, yolo_outputs)
+        #return yolo_outputs if targets is None else (loss, yolo_outputs)
+        ## multi gpu from ""
+        if loss == 0:
+            loss_ = loss
+        else:
+            loss_ = loss.type(torch.cuda.FloatTensor) # multi gpu train need cuda tensor
+
+        yolo_outputs_gpu = yolo_outputs.cuda()
+
+        return yolo_outputs_gpu if targets is None else (loss_, yolo_outputs_gpu)
+        # end
 
     def load_darknet_weights(self, weights_path):
         """Parses and loads the weights stored in 'weights_path'"""
